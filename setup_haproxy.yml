@@ -1,0 +1,36 @@
+- hosts: frontend
+  tasks:
+          - name: "installing haproxy"
+            package:
+                    name: "haproxy"
+          - name: "copying configuration file"
+            template:
+                    src: "haproxy.cfg"
+                    dest: "/etc/haproxy/haproxy.cfg"
+            notify: restart haproxy
+          - name: "starting haproxy service"
+            service:
+                  name: "haproxy"
+                  state: started
+  handlers:
+          - name: "restart haproxy"
+            service:
+                    name: "haproxy"
+                    state: restarted
+
+- hosts: backend
+  tasks:
+          - name: "installing httpd"
+            package:
+                    name: 
+                    - "httpd"
+                    - "php"
+          - name: "starting httpd service"
+            service:
+                    name: "httpd"
+                    state: started
+          - name: "copying file"
+            copy: 
+                 src: "index.php"
+                 dest: "/var/www/html"
+
